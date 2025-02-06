@@ -41,7 +41,7 @@ function g.key(x, y, z)
       -- Send program change to trigger clip x on track y
       -- Track number (y) determines MIDI channel
       -- x-1 for 0-based program numbers (0-15)
-      midi_out:program(x - 1, track)
+      midi_out:program_change(x - 1, track)
       -- Store which clip is active for this track
       active_clips[track] = x
     end
