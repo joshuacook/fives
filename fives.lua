@@ -56,8 +56,6 @@ function grid_redraw()
     for x = 1, 16 do
       if x == active_clips[track] then
         g:led(x, track, 15) -- Active clip is bright
-      elseif track == selected_track then
-        g:led(x, track, 4)  -- Selected track row is dim
       end
     end
   end
