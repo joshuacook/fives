@@ -18,6 +18,7 @@ midi_out = midi.connect(3)
 -- state variables
 selected_track = 1
 tracks = 4 -- MC-101 has 4 tracks
+active_clips = {1, 1, 1, 1} -- Store active clip for each track (1-based)
 
 function init()
   -- Set up midi device
@@ -41,6 +42,8 @@ function g.key(x, y, z)
       -- Track number (y) determines MIDI channel
       -- x-1 for 0-based program numbers (0-15)
       midi_out:program(x - 1, track)
+      -- Store which clip is active for this track
+      active_clips[track] = x
     end
   end
 end
@@ -48,9 +51,15 @@ end
 -- Grid redraw function
 function grid_redraw()
   g:all(0)
-  -- Highlight current track row
-  for x = 1, 16 do
-    g:led(x, selected_track, 4)
+  -- Show active clips as bright (15), selected track row dim (4)
+  for track = 1, tracks do
+    for x = 1, 16 do
+      if x == active_clips[track] then
+        g:led(x, track, 15) -- Active clip is bright
+      elseif track == selected_track then
+        g:led(x, track, 4)  -- Selected track row is dim
+      end
+    end
   end
   g:refresh()
 end
