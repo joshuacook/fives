@@ -13,7 +13,7 @@
 -- Buttons trigger clips
 
 g = grid.connect()
-midi_out = midi.connect(1)
+midi_out = midi.connect(3)
 
 -- state variables
 selected_track = 1
