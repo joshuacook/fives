@@ -37,10 +37,10 @@ function g.key(x, y, z)
   if z == 1 then -- button pressed
     local track = y -- row number corresponds to track
     if track <= tracks then
-      -- Send MIDI message to trigger clip x on track y
-      -- MC-101 uses CC messages for clip triggering
-      local cc_num = 40 + (track - 1) -- CC numbers 40-43 for tracks 1-4
-      midi_out:cc(cc_num, x - 1, track) -- x-1 for 0-based clip numbers
+      -- Send program change to trigger clip x on track y
+      -- Track number (y) determines MIDI channel
+      -- x-1 for 0-based program numbers (0-15)
+      midi_out:program(x - 1, track)
     end
   end
 end
