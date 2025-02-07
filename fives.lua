@@ -13,7 +13,8 @@
 -- Buttons trigger clips
 
 g = grid.connect()
-midi_out = midi.connect(3)
+midi_in = midi.connect(1)
+midi_out = midi.connect(4)
 
 -- state variables
 selected_track = 1
@@ -64,7 +65,11 @@ end
 
 -- Handle incoming MIDI
 function midi_event(data)
-  -- Add MIDI handling if needed
+  if data[1] == 0x90 or data[1] == 0x80 then -- note on/off on channel 1
+    -- Modify channel to 10 (0x99 for note on, 0x89 for note off)
+    local new_status = (data[1] & 0xF0) | 9 -- Change to channel 10
+    midi_out:send({new_status, data[2], data[3]})
+  end
 end
 
 -- Cleanup on script close
