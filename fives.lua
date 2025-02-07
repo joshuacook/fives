@@ -84,12 +84,25 @@ mc_101_notes = {
   top3 = 48,
   top4 = 62,
 }
+-- Map MC-101 notes to Razzmatazz notes
+function map_note(mc_note)
+  for name, mc_val in pairs(mc_101_notes) do
+    if mc_note == mc_val then
+      return razzmatazz_notes[name]
+    end
+  end
+  return mc_note -- if no mapping found, pass through unchanged
+end
+
 -- Handle incoming MIDI
 function midi_event(data)
   if data[1] == 0x90 or data[1] == 0x80 then -- note on/off on channel 1
     local msg_type = (data[1] == 0x90) and "note_on" or "note_off"
+    local mapped_note = map_note(data[2])
+    print(string.format("MIDI: %s note=%d mapped_to=%d velocity=%d", 
+                       msg_type, data[2], mapped_note, data[3]))
     local new_status = (data[1] & 0xF0) | 9 -- Change to channel 10
-    midi_out:send({new_status, data[2], data[3]})
+    midi_out:send({new_status, mapped_note, data[3]})
   end
 end
 
