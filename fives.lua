@@ -64,6 +64,26 @@ function grid_redraw()
   g:refresh()
 end
 
+razzmatazz_notes = {
+  kick = 36,
+  snare = 37,
+  hhc = 38,
+  hho = 39,
+  top1 = 40,
+  top2 = 41,
+  top3 = 42,
+  top4 = 43,
+}
+mc_101_notes = {
+  kick = 36,
+  snare = 38, 
+  hhc = 42,
+  hho = 46,
+  top1 = 41,
+  top2 = 45,
+  top3 = 48,
+  top4 = 62,
+}
 -- Handle incoming MIDI
 function midi_event(data)
   if data[1] == 0x90 or data[1] == 0x80 then -- note on/off on channel 1
