@@ -15,6 +15,7 @@
 g = grid.connect()
 midi_in = midi.connect(1)
 midi_out = midi.connect(4)
+midi_prog = midi.connect(3)  -- Additional connection for program changes
 
 -- state variables
 selected_track = 1
@@ -42,7 +43,7 @@ function g.key(x, y, z)
       -- Send program change to trigger clip x on track y
       -- Track number (y) determines MIDI channel
       -- x-1 for 0-based program numbers (0-15)
-      midi_out:program_change(x - 1, track)
+      midi_prog:program_change(x - 1, track)
       -- Store which clip is active for this track
       active_clips[track] = x
     end
