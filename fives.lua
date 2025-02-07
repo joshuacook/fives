@@ -24,7 +24,7 @@ active_clips = {1, 1, 1, 1} -- Store active clip for each track (1-based)
 
 function init()
   -- Set up midi device
-  midi_out.event = midi_event
+  midi_in.event = midi_event
   
   -- Start grid redraw clock
   grid_redraw_clock = clock.run(function()
