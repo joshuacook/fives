@@ -19,8 +19,16 @@ midi_prog = midi.connect(3)  -- For program changes
 selected_track = 1
 tracks = 4 -- MC-101 has 4 tracks
 active_clips = {1, 1, 1, 1} -- Store active clip for each track (1-based)
+last_grid_event = "No grid events yet"
 
 function init()
+  -- Start screen redraw clock
+  screen_redraw_clock = clock.run(function()
+    while true do
+      clock.sleep(1/15)
+      redraw()
+    end
+  end)
   -- Start grid redraw clock
   grid_redraw_clock = clock.run(function()
     while true do
@@ -41,6 +49,8 @@ function g.key(x, y, z)
       midi_prog:program_change(x - 1, track)
       -- Store which clip is active for this track
       active_clips[track] = x
+      -- Store the event description
+      last_grid_event = string.format("Track %d Clip %d", track, x)
     end
   end
 end
@@ -61,8 +71,18 @@ end
 
 
 -- Cleanup on script close
+function redraw()
+  screen.clear()
+  screen.move(0, 30)
+  screen.text(last_grid_event)
+  screen.update()
+end
+
 function cleanup()
   if grid_redraw_clock then
     clock.cancel(grid_redraw_clock)
+  end
+  if screen_redraw_clock then
+    clock.cancel(screen_redraw_clock)
   end
 end
