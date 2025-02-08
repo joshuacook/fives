@@ -32,6 +32,8 @@ function init()
     if data[1] >= 0x80 and data[1] <= 0x9F then -- note on/off on any channel
       local msg_type = (data[1] >= 0x90) and "note_on" or "note_off"
       last_note_event = string.format("%s note=%d vel=%d", msg_type, data[2], data[3])
+      -- Pass through to MC-101
+      midi_prog:send(data)
     end
   end
   
