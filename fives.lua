@@ -14,7 +14,7 @@
 
 g = grid.connect()
 midi_prog = midi.connect(midi_device)
-midi_in = midi.connect(1)
+midi_in = midi.connect(4)
 
 -- state variables
 selected_track = 1
@@ -22,7 +22,7 @@ tracks = 4 -- MC-101 has 4 tracks
 active_clips = {1, 1, 1, 1} -- Store active clip for each track (1-based)
 last_grid_event = "No grid events yet"
 midi_device = 1 -- MIDI device number for program changes
-midi_in_device = 1 -- MIDI device number for receiving notes
+midi_in_device = 4 -- MIDI device number for receiving notes
 selected_device = "send" -- which device we're editing with encoders
 last_note_event = "No notes yet"
 
