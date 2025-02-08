@@ -83,9 +83,7 @@ end
 function redraw()
   screen.clear()
   screen.move(0, 30)
-  screen.text(last_grid_event)
-  screen.move(0, 50)
-  screen.text(string.format("MIDI Device: %d", midi_device))
+  screen.text(string.format("MIDI Device %d: %s", midi_device, last_grid_event))
   screen.update()
 end
 
