@@ -52,7 +52,7 @@ function g.key(x, y, z)
       -- Store which clip is active for this track
       active_clips[track] = x
       -- Store the event description
-      last_grid_event = string.format("MC 101 send: Track %d Clip %d", track, x)
+      last_grid_event = string.format("Track %d Clip %d", track, x)
     end
   end
 end
@@ -83,7 +83,7 @@ end
 function redraw()
   screen.clear()
   screen.move(0, 30)
-  screen.text(string.format("MIDI Device %d: %s", midi_device, last_grid_event))
+  screen.text(string.format("MC 101 send: %s", last_grid_event))
   screen.update()
 end
 
