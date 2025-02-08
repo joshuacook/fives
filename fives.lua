@@ -5,8 +5,8 @@
 -- Grid control for MC-101
 --
 -- E1: MIDI device (1-4)
--- E2: Select parameter
--- E3: Adjust value
+-- E2: Select device to edit (send/receive)
+-- E3: Adjust selected device (1-4)
 --
 -- Grid:
 -- Each row controls a track
@@ -14,6 +14,7 @@
 
 g = grid.connect()
 midi_prog = midi.connect(midi_device)
+midi_in = midi.connect(1)
 
 -- state variables
 selected_track = 1
@@ -21,8 +22,18 @@ tracks = 4 -- MC-101 has 4 tracks
 active_clips = {1, 1, 1, 1} -- Store active clip for each track (1-based)
 last_grid_event = "No grid events yet"
 midi_device = 1 -- MIDI device number for program changes
+midi_in_device = 1 -- MIDI device number for receiving notes
+selected_device = "send" -- which device we're editing with encoders
+last_note_event = "No notes yet"
 
 function init()
+  -- Set up MIDI input handler
+  midi_in.event = function(data)
+    if data[1] >= 0x80 and data[1] <= 0x9F then -- note on/off on any channel
+      local msg_type = (data[1] >= 0x90) and "note_on" or "note_off"
+      last_note_event = string.format("%s note=%d vel=%d", msg_type, data[2], data[3])
+    end
+  end
   
   -- Start screen redraw clock
   screen_redraw_clock = clock.run(function()
@@ -77,6 +88,16 @@ function enc(n, d)
   if n == 1 then
     midi_device = util.clamp(midi_device + d, 1, 4)
     midi_prog = midi.connect(midi_device)
+  elseif n == 2 then
+    selected_device = selected_device == "send" and "receive" or "send"
+  elseif n == 3 then
+    if selected_device == "send" then
+      midi_device = util.clamp(midi_device + d, 1, 4)
+      midi_prog = midi.connect(midi_device)
+    else
+      midi_in_device = util.clamp(midi_in_device + d, 1, 4)
+      midi_in = midi.connect(midi_in_device)
+    end
   end
 end
 
@@ -84,6 +105,10 @@ function redraw()
   screen.clear()
   screen.move(0, 30)
   screen.text(string.format("MC 101 send %d: %s", midi_device, last_grid_event))
+  screen.move(0, 40)
+  screen.text(string.format("MIDI in %d: %s", midi_in_device, last_note_event))
+  screen.move(0, 50)
+  screen.text(string.format("Editing: %s device", selected_device))
   screen.update()
 end
 
