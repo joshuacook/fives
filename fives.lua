@@ -97,6 +97,7 @@ end
 -- Handle incoming MIDI
 function midi_event(data)
   if data[1] == 0x90 or data[1] == 0x80 then -- note on/off on channel 1
+    
     local msg_type = (data[1] == 0x90) and "note_on" or "note_off"
     local mapped_note = map_note(data[2])
     print(string.format("MIDI: %s note=%d mapped_to=%d velocity=%d", 
