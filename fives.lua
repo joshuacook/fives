@@ -20,7 +20,7 @@ selected_track = 1
 tracks = 4 -- MC-101 has 4 tracks
 active_clips = {1, 1, 1, 1} -- Store active clip for each track (1-based)
 last_grid_event = "No grid events yet"
-midi_device = 3 -- MIDI device number for program changes
+midi_device = 1 -- MIDI device number for program changes
 
 function init()
   
@@ -52,7 +52,7 @@ function g.key(x, y, z)
       -- Store which clip is active for this track
       active_clips[track] = x
       -- Store the event description
-      last_grid_event = string.format("Track %d Clip %d", track, x)
+      last_grid_event = string.format("MC 101 send: Track %d Clip %d", track, x)
     end
   end
 end
