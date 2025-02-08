@@ -13,15 +13,23 @@
 -- Buttons trigger clips
 
 g = grid.connect()
-midi_prog = midi.connect(3)  -- For program changes
+midi_prog = midi.connect(midi_device)
 
 -- state variables
 selected_track = 1
 tracks = 4 -- MC-101 has 4 tracks
 active_clips = {1, 1, 1, 1} -- Store active clip for each track (1-based)
 last_grid_event = "No grid events yet"
+midi_device = 3 -- MIDI device number for program changes
 
 function init()
+  -- Add parameters
+  params:add_number("midi_device", "MIDI Device", 1, 16, midi_device)
+  params:set_action("midi_device", function(x)
+    midi_device = x
+    midi_prog = midi.connect(midi_device)
+  end)
+  
   -- Start screen redraw clock
   screen_redraw_clock = clock.run(function()
     while true do
@@ -75,6 +83,8 @@ function redraw()
   screen.clear()
   screen.move(0, 30)
   screen.text(last_grid_event)
+  screen.move(0, 50)
+  screen.text(string.format("MIDI Device: %d", midi_device))
   screen.update()
 end
 
