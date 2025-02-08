@@ -4,7 +4,7 @@
 --
 -- Grid control for MC-101
 --
--- E1: Select track
+-- E1: MIDI device (1-4)
 -- E2: Select parameter
 -- E3: Adjust value
 --
@@ -23,12 +23,6 @@ last_grid_event = "No grid events yet"
 midi_device = 3 -- MIDI device number for program changes
 
 function init()
-  -- Add parameters
-  params:add_number("midi_device", "MIDI Device", 1, 16, midi_device)
-  params:set_action("midi_device", function(x)
-    midi_device = x
-    midi_prog = midi.connect(midi_device)
-  end)
   
   -- Start screen redraw clock
   screen_redraw_clock = clock.run(function()
@@ -78,7 +72,14 @@ function grid_redraw()
 end
 
 
--- Cleanup on script close
+-- Handle encoder input
+function enc(n, d)
+  if n == 1 then
+    midi_device = util.clamp(midi_device + d, 1, 4)
+    midi_prog = midi.connect(midi_device)
+  end
+end
+
 function redraw()
   screen.clear()
   screen.move(0, 30)
